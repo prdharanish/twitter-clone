@@ -27,12 +27,13 @@ cloudinary.config({
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ CORS with credentials - allow any localhost port
+// ✅ CORS with credentials - allow localhost and production frontend
 app.use(
 	cors({
 		origin: (origin, callback) => {
-			// Allow requests from any localhost port or no origin (e.g. server-to-server)
-			if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
+			const allowedOrigins = [process.env.FRONTEND_URL]; // Set this in Render dashboard
+			// Allow requests from any localhost port, allowed production origin, or no origin (e.g. POSTMAN)
+			if (!origin || /^http:\/\/localhost:\d+$/.test(origin) || allowedOrigins.includes(origin)) {
 				callback(null, true);
 			} else {
 				callback(new Error("Not allowed by CORS"));
