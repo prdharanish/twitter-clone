@@ -31,7 +31,10 @@ const PORT = process.env.PORT || 5000;
 app.use(
 	cors({
 		origin: (origin, callback) => {
-			const allowedOrigins = [process.env.FRONTEND_URL]; // Set this in Render dashboard
+			const allowedOrigins = [
+				process.env.FRONTEND_URL,
+				"https://twitter-clone-frontend-nine.vercel.app" // explicit fallback
+			];
 			// Allow requests from any localhost port, allowed production origin, or no origin (e.g. POSTMAN)
 			if (!origin || /^http:\/\/localhost:\d+$/.test(origin) || allowedOrigins.includes(origin)) {
 				callback(null, true);

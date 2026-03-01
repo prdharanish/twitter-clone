@@ -1,1 +1,1 @@
-export const baseUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+export const baseUrl = process.env.REACT_APP_BACKEND_URL || (process.env.NODE_ENV === "development" ? "http://localhost:5000" : "https://twitter-clone-1-i9n9.onrender.com");
