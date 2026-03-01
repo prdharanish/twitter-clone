@@ -63,8 +63,9 @@ app.use("/api/notifications", notificationRoutes);
 // }
 
 
-// Start Server
-app.listen(PORT, () => {
-	console.log(`🚀 Server is running on port ${PORT}`);
-	connectDB();
+// Connect DB first, then start server
+connectDB().then(() => {
+	app.listen(PORT, () => {
+		console.log(`🚀 Server is running on port ${PORT}`);
+	});
 });
