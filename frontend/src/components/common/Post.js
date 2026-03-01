@@ -8,7 +8,8 @@ import {
 	FaRegBookmark,
 } from "react-icons/fa";
 import { BiRepost } from "react-icons/bi";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useAuthUser from "../../hooks/useAuthUser";
 import { toast } from "react-hot-toast";
 
 import LoadingSpinner from "./LoadingSpinner";
@@ -18,7 +19,7 @@ import { baseUrl } from "../../constant/url";
 const Post = ({ post }) => {
 	const [comment, setComment] = useState("");
 	const queryClient = useQueryClient();
-	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+	const { data: authUser } = useAuthUser();
 
 	const postOwner = post.user;
 	const isMyPost = authUser?._id === postOwner?._id;
@@ -41,20 +42,20 @@ const Post = ({ post }) => {
 	});
 
 	const { mutate: toggleLike, isPending: isLiking } = useMutation({
-  mutationFn: async () => {
-    const res = await fetch(`${baseUrl}/api/posts/like/${post._id}`, {
-      method: "PUT", // use PUT since you're toggling like state
-      credentials: "include",
-    });
-    if (!res.ok) throw new Error(await res.text());
-    return res.json(); // this should be updated likes array
-  },
-  onSuccess: () => {
-    // Safer approach: refetch posts to update UI
-    queryClient.invalidateQueries(["posts"]);
-  },
-  onError: (err) => toast.error(err.message),
-});
+		mutationFn: async () => {
+			const res = await fetch(`${baseUrl}/api/posts/like/${post._id}`, {
+				method: "PUT", // use PUT since you're toggling like state
+				credentials: "include",
+			});
+			if (!res.ok) throw new Error(await res.text());
+			return res.json(); // this should be updated likes array
+		},
+		onSuccess: () => {
+			// Safer approach: refetch posts to update UI
+			queryClient.invalidateQueries(["posts"]);
+		},
+		onError: (err) => toast.error(err.message),
+	});
 
 
 	const { mutate: commentPost, isPending: isCommenting } = useMutation({

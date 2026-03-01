@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import useAuthUser from "../../hooks/useAuthUser";
 import { FaArrowLeft, FaLink } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
@@ -24,7 +25,7 @@ const ProfilePage = () => {
 
 	const { username } = useParams();
 	const { follow, isPending } = useFollow();
-	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+	const { data: authUser } = useAuthUser();
 
 	const {
 		data: user,

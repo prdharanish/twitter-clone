@@ -35,7 +35,15 @@ const EditProfileModal = ({ authUser }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		updateProfile(formData);
+
+		// Only include password fields if the user actually filled them in
+		const payload = { ...formData };
+		if (!payload.currentPassword && !payload.newPassword) {
+			delete payload.currentPassword;
+			delete payload.newPassword;
+		}
+
+		updateProfile(payload);
 	};
 
 	return (

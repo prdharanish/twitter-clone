@@ -5,7 +5,7 @@ import { baseUrl } from "../constant/url";
 const useUpdateUserProfile = () => {
   const queryClient = useQueryClient();
 
-  const { mutateAsync: updateProfile, isLoading: isUpdatingProfile } = useMutation({
+  const { mutate: updateProfile, isLoading: isUpdatingProfile } = useMutation({
     mutationFn: async (formData) => {
       const res = await fetch(`${baseUrl}/api/users/update`, {
         method: "POST",

@@ -16,9 +16,9 @@ router.get("/profile/:username", protectRoute, getUserProfile);
 router.get("/suggested", protectRoute, getSuggestedUsers);
 
 // Follow or unfollow a user by ID (protected route)
-router.put("/follow/:id", protectRoute, followUnfollowUser); // changed to PUT
+router.post("/follow/:id", protectRoute, followUnfollowUser);
 
 // Update profile (protected route)
-router.put("/update", protectRoute, updateUser); // changed to PUT
+router.post("/update", protectRoute, updateUser);
 
 export default router;

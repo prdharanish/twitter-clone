@@ -9,22 +9,35 @@ import notificationRoutes from "./routes/notification.route.js";
 import connectDB from "./db/connectDB.js";
 import cors from "cors";
 import path from "path";
-dotenv.config();
+import { fileURLToPath } from "url";
 
+// Resolve __dirname for ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __filedir = path.dirname(__filename);
+
+// Always load .env from the project root (one level up from /backend)
+dotenv.config({ path: path.join(__filedir, "../.env") });
+const __dirname = path.resolve();
 // Configure Cloudinary
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
 	api_secret: process.env.CLOUDINARY_API_SECRET_KEY,
 });
-const __dirname=path.resolve();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ CORS with credentials
+// ✅ CORS with credentials - allow any localhost port
 app.use(
 	cors({
-		origin: "http://localhost:3000", // your frontend URL
+		origin: (origin, callback) => {
+			// Allow requests from any localhost port or no origin (e.g. server-to-server)
+			if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
+				callback(null, true);
+			} else {
+				callback(new Error("Not allowed by CORS"));
+			}
+		},
 		credentials: true,
 	})
 );
@@ -44,11 +57,11 @@ app.use("/api/notifications", notificationRoutes);
 
 // if (process.env.NODE_ENV === "production") {
 //   app.use(express.static(path.join(__dirname, "/frontend/build")));
-
-//   app.use("*", (req, res) => {
+//   app.get("*", (req, res) => {
 //     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
 //   });
 // }
+
 
 // Start Server
 app.listen(PORT, () => {

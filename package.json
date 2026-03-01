@@ -6,6 +6,7 @@
     "start": "node backend/server.js",
     "build":"npm install && npm install --include=dev --prefix frontend && npm run build --prefix frontend",
     "dev": "nodemon backend/server.js"
+
   },
   "keywords": [],
   "author": "",
