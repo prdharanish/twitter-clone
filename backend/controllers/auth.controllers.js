@@ -33,23 +33,23 @@ export const signup = async (req, res) => {
 			email,
 			password: hashedPassword,
 		});
-        if(newUser){
-            generateToken(newUser._id,res);
-		await newUser.save();
+		if (newUser) {
+			generateToken(newUser._id, res);
+			await newUser.save();
 
-		res.status(201).json({
-			_id: newUser._id,
-			fullName: newUser.fullName,
-			username: newUser.username,
-			email: newUser.email,
-			followers: newUser.followers,
-			following: newUser.following,
-			profileImg: newUser.profileImg,
-			coverImg: newUser.coverImg,
-			bio: newUser.bio,
-			link: newUser.link,
-		});
-    }
+			res.status(201).json({
+				_id: newUser._id,
+				fullName: newUser.fullName,
+				username: newUser.username,
+				email: newUser.email,
+				followers: newUser.followers,
+				following: newUser.following,
+				profileImg: newUser.profileImg,
+				coverImg: newUser.coverImg,
+				bio: newUser.bio,
+				link: newUser.link,
+			});
+		}
 	} catch (error) {
 		console.log(`Error in signup Controller: ${error}`);
 		res.status(500).json({ error: "Internal Server Error" });
@@ -86,7 +86,13 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
 	try {
-		res.cookie("jwt", "", { maxAge: 0 });
+		const isProduction = process.env.NODE_ENV !== "development";
+		res.cookie("jwt", "", {
+			maxAge: 0,
+			httpOnly: true,
+			sameSite: isProduction ? "none" : "strict",
+			secure: isProduction,
+		});
 		res.status(200).json({ message: "Logged out successfully" });
 	} catch (error) {
 		console.log("Error in logout controller", error.message);

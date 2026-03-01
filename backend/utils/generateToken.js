@@ -5,11 +5,13 @@ const generateToken = (userId, res) => {
     expiresIn: "15d",
   });
 
+  const isProduction = process.env.NODE_ENV !== "development";
+
   res.cookie("jwt", token, {
     maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in ms
     httpOnly: true,
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: isProduction ? "none" : "strict",
+    secure: isProduction,
   });
 };
 
